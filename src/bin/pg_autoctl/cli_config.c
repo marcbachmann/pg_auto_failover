@@ -274,12 +274,16 @@ cli_config_get(int argc, char **argv)
 	switch (ProbeConfigurationFileRole(config.pathnames.config))
 	{
 		case PG_AUTOCTL_ROLE_MONITOR:
+		{
 			(void) cli_monitor_config_get(argc, argv);
 			break;
+		}
 
 		case PG_AUTOCTL_ROLE_KEEPER:
+		{
 			(void) cli_keeper_config_get(argc, argv);
 			break;
+		}
 
 		default:
 		{
@@ -427,9 +431,9 @@ cli_monitor_config_get(int argc, char **argv)
 			char value[BUFSIZE];
 
 			if (monitor_config_get_setting(&mconfig,
-										  path,
-										  value,
-										  BUFSIZE))
+										   path,
+										   value,
+										   BUFSIZE))
 			{
 				fprintf(stdout, "%s\n", value);
 			}
@@ -472,12 +476,16 @@ cli_config_set(int argc, char **argv)
 	switch (ProbeConfigurationFileRole(config.pathnames.config))
 	{
 		case PG_AUTOCTL_ROLE_MONITOR:
+		{
 			(void) cli_monitor_config_set(argc, argv);
 			break;
+		}
 
 		case PG_AUTOCTL_ROLE_KEEPER:
+		{
 			(void) cli_keeper_config_set(argc, argv);
 			break;
+		}
 
 		default:
 		{

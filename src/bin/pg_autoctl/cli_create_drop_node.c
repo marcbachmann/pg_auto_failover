@@ -52,9 +52,8 @@ static bool discover_nodename(char *nodename, int size,
 							  const char *monitorHostname, int monitorPort);
 static void check_nodename(const char *nodename);
 
-static void stop_postgres_and_remove_pgdata_and_config(
-	ConfigFilePaths *pathnames,
-	PostgresSetup *pgSetup);
+static void stop_postgres_and_remove_pgdata_and_config(ConfigFilePaths *pathnames,
+													   PostgresSetup *pgSetup);
 
 CommandLine create_monitor_command =
 	make_command("monitor",
@@ -242,9 +241,9 @@ cli_create_postgres_getopts(int argc, char **argv)
 		{ "version", no_argument, NULL, 'V' },
 		{ "verbose", no_argument, NULL, 'v' },
 		{ "quiet", no_argument, NULL, 'q' },
- 		{ "help", no_argument, NULL, 'h' },
-		{ "candidate-priority", required_argument, NULL, 'P'},
-		{ "replication-quorum", required_argument, NULL, 'r'},
+		{ "help", no_argument, NULL, 'h' },
+		{ "candidate-priority", required_argument, NULL, 'P' },
+		{ "replication-quorum", required_argument, NULL, 'r' },
 		{ "run", no_argument, NULL, 'x' },
 		{ "help", no_argument, NULL, 0 },
 		{ NULL, 0, NULL, 0 }
@@ -316,7 +315,7 @@ cli_create_monitor_getopts(int argc, char **argv)
 		{ "version", no_argument, NULL, 'V' },
 		{ "verbose", no_argument, NULL, 'v' },
 		{ "quiet", no_argument, NULL, 'q' },
- 		{ "help", no_argument, NULL, 'h' },
+		{ "help", no_argument, NULL, 'h' },
 		{ "run", no_argument, NULL, 'x' },
 		{ "help", no_argument, NULL, 0 },
 		{ NULL, 0, NULL, 0 }
@@ -393,16 +392,22 @@ cli_create_monitor_getopts(int argc, char **argv)
 				switch (verboseCount)
 				{
 					case 1:
+					{
 						log_set_level(LOG_INFO);
 						break;
+					}
 
 					case 2:
+					{
 						log_set_level(LOG_DEBUG);
 						break;
+					}
 
 					default:
+					{
 						log_set_level(LOG_TRACE);
 						break;
+					}
 				}
 				break;
 			}
@@ -549,7 +554,7 @@ cli_create_monitor(int argc, char **argv)
 		if (IS_EMPTY_STRING_BUFFER(config.nodename))
 		{
 			if (!discover_nodename((char *) (&config.nodename),
-								   _POSIX_HOST_NAME_MAX ,
+								   _POSIX_HOST_NAME_MAX,
 								   DEFAULT_INTERFACE_LOOKUP_SERVICE_NAME,
 								   DEFAULT_INTERFACE_LOOKUP_SERVICE_PORT))
 			{
@@ -624,7 +629,7 @@ cli_drop_node_getopts(int argc, char **argv)
 		{ "version", no_argument, NULL, 'V' },
 		{ "verbose", no_argument, NULL, 'v' },
 		{ "quiet", no_argument, NULL, 'q' },
- 		{ "help", no_argument, NULL, 'h' },
+		{ "help", no_argument, NULL, 'h' },
 		{ NULL, 0, NULL, 0 }
 	};
 
@@ -662,16 +667,22 @@ cli_drop_node_getopts(int argc, char **argv)
 				switch (verboseCount)
 				{
 					case 1:
+					{
 						log_set_level(LOG_INFO);
 						break;
+					}
 
 					case 2:
+					{
 						log_set_level(LOG_DEBUG);
 						break;
+					}
 
 					default:
+					{
 						log_set_level(LOG_TRACE);
 						break;
+					}
 				}
 				break;
 			}
@@ -855,9 +866,9 @@ cli_drop_node(int argc, char **argv)
 	if (dropAndDestroy)
 	{
 		(void)
-			stop_postgres_and_remove_pgdata_and_config(
-				&config.pathnames,
-				&config.pgSetup);
+		stop_postgres_and_remove_pgdata_and_config(
+			&config.pathnames,
+			&config.pgSetup);
 	}
 	else
 	{
@@ -880,7 +891,7 @@ cli_drop_node(int argc, char **argv)
 		 * fresh environment.
 		 */
 		log_warn("Configuration file \"%s\" has been preserved",
-			 config.pathnames.config);
+				 config.pathnames.config);
 
 		if (directory_exists(config.pgSetup.pgdata))
 		{

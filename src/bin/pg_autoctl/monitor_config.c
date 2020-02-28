@@ -213,7 +213,6 @@ monitor_config_init_from_pgsetup(MonitorConfig *mconfig,
 }
 
 
-
 /*
  * monitor_config_read_file overrides values in given MonitorConfig with
  * whatever values are read from given configuration filename.
@@ -383,7 +382,7 @@ monitor_config_merge_options(MonitorConfig *config, MonitorConfig *options)
  */
 bool
 monitor_config_get_postgres_uri(MonitorConfig *config, char *connectionString,
-		size_t size)
+								size_t size)
 {
 	char *connStringEnd = connectionString;
 	char host[BUFSIZE];
@@ -392,9 +391,9 @@ monitor_config_get_postgres_uri(MonitorConfig *config, char *connectionString,
 	{
 		strlcpy(host, config->nodename, BUFSIZE);
 	}
-	else if (IS_EMPTY_STRING_BUFFER(config->pgSetup.listen_addresses)
-			 || strcmp(config->pgSetup.listen_addresses,
-					   POSTGRES_DEFAULT_LISTEN_ADDRESSES) == 0)
+	else if (IS_EMPTY_STRING_BUFFER(config->pgSetup.listen_addresses) ||
+			 strcmp(config->pgSetup.listen_addresses,
+					POSTGRES_DEFAULT_LISTEN_ADDRESSES) == 0)
 	{
 		/*
 		 * We ouput the monitor connection string using the LAN ip of the

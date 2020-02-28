@@ -70,8 +70,8 @@ ProceedGroupState(AutoFailoverNode *activeNode)
 	int nodesCount = list_length(nodesGroupList);
 
 	/* when there's no other node anymore, not even one */
-	if (nodesCount == 1
-		&& !IsCurrentState(activeNode, REPLICATION_STATE_SINGLE))
+	if (nodesCount == 1 &&
+		!IsCurrentState(activeNode, REPLICATION_STATE_SINGLE))
 	{
 		char message[BUFSIZE];
 
@@ -436,10 +436,9 @@ ProceedGroupStateForPrimaryNode(AutoFailoverNode *primaryNode)
 				/* other node is behind, no longer eligible for promotion */
 				AssignGoalState(otherNode,
 								REPLICATION_STATE_CATCHINGUP, message);
-
 			}
-			else if (!otherNode->replicationQuorum
-					 || otherNode->candidatePriority == 0)
+			else if (!otherNode->replicationQuorum ||
+					 otherNode->candidatePriority == 0)
 			{
 				/* also not a candidate */
 				--failoverCandidateCount;
@@ -564,9 +563,10 @@ IsHealthy(AutoFailoverNode *pgAutoFailoverNode)
 		return false;
 	}
 
-	return pgAutoFailoverNode->health == NODE_HEALTH_GOOD
-		&& pgAutoFailoverNode->pgIsRunning == true;
+	return pgAutoFailoverNode->health == NODE_HEALTH_GOOD &&
+		   pgAutoFailoverNode->pgIsRunning == true;
 }
+
 
 /*
  * IsUnhealthy returns whether the given node is unhealthy, meaning it failed
@@ -626,8 +626,8 @@ IsDrainTimeExpired(AutoFailoverNode *pgAutoFailoverNode)
 	bool drainTimeExpired = false;
 	TimestampTz now = 0;
 
-	if (pgAutoFailoverNode == NULL
-		|| pgAutoFailoverNode->goalState != REPLICATION_STATE_DEMOTE_TIMEOUT)
+	if (pgAutoFailoverNode == NULL ||
+		pgAutoFailoverNode->goalState != REPLICATION_STATE_DEMOTE_TIMEOUT)
 	{
 		return false;
 	}

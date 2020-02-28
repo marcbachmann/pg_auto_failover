@@ -26,7 +26,7 @@
 
 static bool get_pgpid(PostgresSetup *pgSetup, bool pg_is_not_running_is_ok);
 static PostmasterStatus pmStatusFromString(const char *postmasterStatus);
-static char *pmStatusToString(PostmasterStatus pm_status);
+static char * pmStatusToString(PostmasterStatus pm_status);
 
 
 /*
@@ -133,7 +133,7 @@ pg_setup_init(PostgresSetup *pgSetup,
 		else
 		{
 			log_debug("Found PostgreSQL system %" PRIu64 " at \"%s\", "
-					  "version %u, catalog version %u",
+														 "version %u, catalog version %u",
 					  pgSetup->control.system_identifier,
 					  pgSetup->pgdata,
 					  pgSetup->control.pg_control_version,
@@ -231,8 +231,8 @@ pg_setup_init(PostgresSetup *pgSetup,
 	{
 		char *pg_regress_sock_dir = getenv("PG_REGRESS_SOCK_DIR");
 
-		if (pg_regress_sock_dir != NULL
-			&& strcmp(pg_regress_sock_dir, "") == 0)
+		if (pg_regress_sock_dir != NULL &&
+			strcmp(pg_regress_sock_dir, "") == 0)
 		{
 			log_error("PG_REGRESS_SOCK_DIR is set to \"\" to disable unix "
 					  "socket directories, now --pghost is mandatory, "
@@ -313,9 +313,9 @@ pg_setup_init(PostgresSetup *pgSetup,
 	 * And we always double-check with PGDATA/postmaster.pid if we have it, and
 	 * we should have it in the normal/expected case.
 	 */
-	if (pgIsReady
-		&& pgSetup->pidFile.pid > 0
-		&& pgSetup->pgport != pgSetup->pidFile.port)
+	if (pgIsReady &&
+		pgSetup->pidFile.pid > 0 &&
+		pgSetup->pgport != pgSetup->pidFile.port)
 	{
 		log_error("Given --pgport %d doesn't match PostgreSQL "
 				  "port %d from \"%s/postmaster.pid\"",
@@ -326,9 +326,9 @@ pg_setup_init(PostgresSetup *pgSetup,
 	/*
 	 * If PostgreSQL is running, register if it's in recovery or not.
 	 */
-	if (pgSetup->control.pg_control_version > 0
-		&& pgSetup->pidFile.port > 0
-		&& pgSetup->pgport == pgSetup->pidFile.port)
+	if (pgSetup->control.pg_control_version > 0 &&
+		pgSetup->pidFile.port > 0 &&
+		pgSetup->pgport == pgSetup->pidFile.port)
 	{
 		PGSQL pgsql = { 0 };
 		char connInfo[MAXCONNINFO];
@@ -425,7 +425,7 @@ get_pgpid(PostgresSetup *pgSetup, bool pg_is_not_running_is_ok)
 		}
 	}
 
- 	fclose(fp);
+	fclose(fp);
 
 	if (pid > 0)
 	{
@@ -544,13 +544,13 @@ read_pg_pidfile(PostgresSetup *pgSetup, bool pg_is_not_running_is_ok)
 			int lineLength = strlen(line);
 			if (lineLength > 1)
 			{
-				line[lineLength -1] = '\0';
+				line[lineLength - 1] = '\0';
 
 				pgSetup->pm_status = pmStatusFromString(line);
 			}
 		}
 	}
- 	fclose(fp);
+	fclose(fp);
 
 	log_trace("read_pg_pidfile: pid %ld, port %d, host %s, status \"%s\"",
 			  pgSetup->pidFile.pid,
@@ -624,6 +624,7 @@ pg_setup_as_json(PostgresSetup *pgSetup, JSON_Value *js)
 	return true;
 }
 
+
 /*
  * pg_setup_get_local_connection_string build a connecting string to connect
  * to the local postgres server and writes it to connectionString, which should
@@ -645,18 +646,18 @@ pg_setup_get_local_connection_string(PostgresSetup *pgSetup,
 	 * usually), even when the configuration setup is using a unix directory
 	 * setting.
 	 */
-	if (pg_regress_sock_dir != NULL
-		&& strcmp(pg_regress_sock_dir, "") == 0
-		&& (IS_EMPTY_STRING_BUFFER(pgSetup->pghost)
-			|| pgSetup->pghost[0] == '/'))
+	if (pg_regress_sock_dir != NULL &&
+		strcmp(pg_regress_sock_dir, "") == 0 &&
+		(IS_EMPTY_STRING_BUFFER(pgSetup->pghost) ||
+		 pgSetup->pghost[0] == '/'))
 	{
 		connStringEnd += sprintf(connStringEnd, " host=localhost");
 	}
 	else if (!IS_EMPTY_STRING_BUFFER(pgSetup->pghost))
 	{
-		if (pg_regress_sock_dir != NULL
-			&& strcmp(pg_regress_sock_dir, "") != 0
-			&& strcmp(pgSetup->pghost, pg_regress_sock_dir) != 0)
+		if (pg_regress_sock_dir != NULL &&
+			strcmp(pg_regress_sock_dir, "") != 0 &&
+			strcmp(pgSetup->pghost, pg_regress_sock_dir) != 0)
 		{
 			/*
 			 * It might turn out ok (stray environement), but in case of
@@ -701,9 +702,10 @@ pg_setup_is_running(PostgresSetup *pgSetup)
 	bool pg_is_not_running_is_ok = true;
 
 	return pgSetup->pidFile.pid != 0
-		/* if we don't have the PID yet, try reading it now */
-		|| (get_pgpid(pgSetup, pg_is_not_running_is_ok)
-			&& pgSetup->pidFile.pid != 0);
+
+	       /* if we don't have the PID yet, try reading it now */
+		   || (get_pgpid(pgSetup, pg_is_not_running_is_ok) &&
+			   pgSetup->pidFile.pid != 0);
 }
 
 
@@ -748,7 +750,7 @@ pg_setup_is_ready(PostgresSetup *pgSetup, bool pg_is_not_running_is_ok)
 			log_trace("pg_setup_is_ready: %s",
 					  pmStatusToString(pgSetup->pm_status));
 
- 			if (!get_pgpid(pgSetup, pg_is_not_running_is_ok))
+			if (!get_pgpid(pgSetup, pg_is_not_running_is_ok))
 			{
 				/*
 				 * We failed to read the Postgres pid file, and infinite
@@ -875,6 +877,7 @@ pg_setup_get_username(PostgresSetup *pgSetup)
 	if (pw)
 	{
 		log_trace("username found in passwd: %s", pw->pw_name);
+
 		/* struct passwd is in thread shared space, return a copy */
 		return strdup(pw->pw_name);
 	}
@@ -906,7 +909,8 @@ pg_setup_get_auth_method(PostgresSetup *pgSetup)
 		return pgSetup->authMethod;
 	}
 
-	log_trace("auth method not configured, falling back to default value : %s", DEFAULT_AUTH_METHOD);
+	log_trace("auth method not configured, falling back to default value : %s",
+			  DEFAULT_AUTH_METHOD);
 
 	return DEFAULT_AUTH_METHOD;
 }
@@ -957,16 +961,18 @@ pg_setup_set_absolute_pgdata(PostgresSetup *pgSetup)
 PgInstanceKind
 nodeKindFromString(const char *nodeKind)
 {
-	PgInstanceKind kindArray[] = { NODE_KIND_UNKNOWN,
-								   NODE_KIND_UNKNOWN,
-								   NODE_KIND_STANDALONE,
-								   NODE_KIND_CITUS_COORDINATOR,
-								   NODE_KIND_CITUS_WORKER };
+	PgInstanceKind kindArray[] = {
+		NODE_KIND_UNKNOWN,
+		NODE_KIND_UNKNOWN,
+		NODE_KIND_STANDALONE,
+		NODE_KIND_CITUS_COORDINATOR,
+		NODE_KIND_CITUS_WORKER
+	};
 	char *kindList[] = {
 		"", "unknown", "standalone", "coordinator", "worker", NULL
 	};
 
-	for(int listIndex = 0; kindList[listIndex] != NULL; listIndex++)
+	for (int listIndex = 0; kindList[listIndex] != NULL; listIndex++)
 	{
 		char *candidate = kindList[listIndex];
 
@@ -996,13 +1002,19 @@ nodeKindToString(PgInstanceKind kind)
 	switch (kind)
 	{
 		case NODE_KIND_STANDALONE:
+		{
 			return "standalone";
+		}
 
 		case NODE_KIND_CITUS_COORDINATOR:
+		{
 			return "coordinator";
+		}
 
 		case NODE_KIND_CITUS_WORKER:
+		{
 			return "worker";
+		}
 
 		default:
 			log_fatal("nodeKindToString: unknown node kind %d", kind);
@@ -1060,20 +1072,28 @@ pmStatusToString(PostmasterStatus pm_status)
 	switch (pm_status)
 	{
 		case POSTMASTER_STATUS_UNKNOWN:
+		{
 			return "unknown";
+		}
 
 		case POSTMASTER_STATUS_STARTING:
+		{
 			return "starting";
+		}
 
 		case POSTMASTER_STATUS_STOPPING:
+		{
 			return "stopping";
+		}
 
 		case POSTMASTER_STATUS_READY:
+		{
 			return "ready";
+		}
 
 		case POSTMASTER_STATUS_STANDBY:
 			return "standby";
-	};
+	}
 
 	/* keep compiler happy */
 	return "unknown";

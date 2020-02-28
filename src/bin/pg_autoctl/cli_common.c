@@ -84,8 +84,10 @@ cli_create_node_getopts(int argc, char **argv,
 	LocalOptionConfig.prepare_promotion_walreceiver = -1;
 	LocalOptionConfig.postgresql_restart_failure_timeout = -1;
 	LocalOptionConfig.postgresql_restart_failure_max_retries = -1;
-	LocalOptionConfig.pgSetup.settings.candidatePriority = FAILOVER_NODE_CANDIDATE_PRIORITY;
-	LocalOptionConfig.pgSetup.settings.replicationQuorum = FAILOVER_NODE_REPLICATION_QUORUM;
+	LocalOptionConfig.pgSetup.settings.candidatePriority =
+		FAILOVER_NODE_CANDIDATE_PRIORITY;
+	LocalOptionConfig.pgSetup.settings.replicationQuorum =
+		FAILOVER_NODE_REPLICATION_QUORUM;
 
 
 	optind = 0;
@@ -176,6 +178,7 @@ cli_create_node_getopts(int argc, char **argv,
 				log_trace("--auth %s", LocalOptionConfig.pgSetup.authMethod);
 				break;
 			}
+
 			case 'd':
 			{
 				/* { "dbname", required_argument, NULL, 'd' } */
@@ -290,16 +293,22 @@ cli_create_node_getopts(int argc, char **argv,
 				switch (verboseCount)
 				{
 					case 1:
+					{
 						log_set_level(LOG_INFO);
 						break;
+					}
 
 					case 2:
+					{
 						log_set_level(LOG_DEBUG);
 						break;
+					}
 
 					default:
+					{
 						log_set_level(LOG_TRACE);
 						break;
+					}
 				}
 				break;
 			}
@@ -354,14 +363,14 @@ cli_create_node_getopts(int argc, char **argv,
 	/*
 	 * You can't both have a monitor a use --disable-monitor.
 	 */
-	if (!IS_EMPTY_STRING_BUFFER(LocalOptionConfig.monitor_pguri)
-		&& LocalOptionConfig.monitorDisabled)
+	if (!IS_EMPTY_STRING_BUFFER(LocalOptionConfig.monitor_pguri) &&
+		LocalOptionConfig.monitorDisabled)
 	{
 		log_fatal("Use either --monitor or --disable-monitor, not both.");
 		exit(EXIT_CODE_BAD_ARGS);
 	}
-	else if (IS_EMPTY_STRING_BUFFER(LocalOptionConfig.monitor_pguri)
-			 && !LocalOptionConfig.monitorDisabled)
+	else if (IS_EMPTY_STRING_BUFFER(LocalOptionConfig.monitor_pguri) &&
+			 !LocalOptionConfig.monitorDisabled)
 	{
 		log_fatal("Failed to set the monitor URI: "
 				  "use either --monitor postgresql://... or --disable-monitor");
@@ -468,16 +477,22 @@ cli_getopt_pgdata(int argc, char **argv)
 				switch (verboseCount)
 				{
 					case 1:
+					{
 						log_set_level(LOG_INFO);
 						break;
+					}
 
 					case 2:
+					{
 						log_set_level(LOG_DEBUG);
 						break;
+					}
 
 					default:
+					{
 						log_set_level(LOG_TRACE);
 						break;
+					}
 				}
 				break;
 			}

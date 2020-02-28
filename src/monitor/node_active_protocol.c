@@ -258,7 +258,7 @@ node_active(PG_FUNCTION_ARGS)
 	Oid currentReplicationStateOid = PG_GETARG_OID(5);
 
 	bool currentPgIsRunning = PG_GETARG_BOOL(6);
-	XLogRecPtr	currentLSN = PG_GETARG_LSN(7);
+	XLogRecPtr currentLSN = PG_GETARG_LSN(7);
 	text *currentPgsrSyncStateText = PG_GETARG_TEXT_P(8);
 	char *currentPgsrSyncState = text_to_cstring(currentPgsrSyncStateText);
 
@@ -343,8 +343,7 @@ NodeActive(char *formationId, char *nodeName, int32 nodePort,
 	{
 		LockFormation(formationId, ShareLock);
 
-		if (pgAutoFailoverNode->reportedState
-			!= currentNodeState->replicationState)
+		if (pgAutoFailoverNode->reportedState != currentNodeState->replicationState)
 		{
 			/*
 			 * The keeper is reporting that it achieved the assigned goal
@@ -454,6 +453,7 @@ JoinAutoFailoverFormation(AutoFailoverFormation *formation,
 		{
 			initialState = REPLICATION_STATE_SINGLE;
 		}
+
 		/* target group already has a primary, any other node is a standby */
 		else if (formation->opt_secondary && list_length(groupNodeList) >= 1)
 		{
@@ -545,6 +545,7 @@ AssignGroupId(AutoFailoverFormation *formation, char *nodeName, int nodePort,
 {
 	int groupId = -1;
 	int candidateGroupId =
+
 		/*
 		 * a Citus formation's coordinator always asks for groupId 0, and the
 		 * workers are not allowed to ask for groupId 0. So here, when the
@@ -740,6 +741,7 @@ get_other_node(PG_FUNCTION_ARGS)
 			(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
 			 errmsg("pgautofailover.get_other_node is no longer supported")));
 }
+
 
 /*
  * get_other_nodes returns the other node in a group, if any.
@@ -1066,8 +1068,8 @@ start_maintenance(PG_FUNCTION_ARGS)
 				 errmsg("cannot start maintenance: group does not have 2 nodes")));
 	}
 
-	if (currentNode->reportedState == REPLICATION_STATE_MAINTENANCE
-		|| currentNode->goalState == REPLICATION_STATE_MAINTENANCE)
+	if (currentNode->reportedState == REPLICATION_STATE_MAINTENANCE ||
+		currentNode->goalState == REPLICATION_STATE_MAINTENANCE)
 	{
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
@@ -1076,8 +1078,8 @@ start_maintenance(PG_FUNCTION_ARGS)
 						currentNode->nodeName, currentNode->nodePort)));
 	}
 
-	if (!(IsStateIn(currentNode->reportedState, secondaryStates)
-		  && currentNode->reportedState == currentNode->goalState))
+	if (!(IsStateIn(currentNode->reportedState, secondaryStates) &&
+		  currentNode->reportedState == currentNode->goalState))
 	{
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
@@ -1088,8 +1090,8 @@ start_maintenance(PG_FUNCTION_ARGS)
 						ReplicationStateGetName(currentNode->reportedState))));
 	}
 
-	if (!(IsStateIn(otherNode->goalState, primaryStates)
-		  && currentNode->reportedState == currentNode->goalState))
+	if (!(IsStateIn(otherNode->goalState, primaryStates) &&
+		  currentNode->reportedState == currentNode->goalState))
 	{
 		ereport(ERROR,
 				(errcode(ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE),
@@ -1271,11 +1273,11 @@ set_node_candidate_priority(PG_FUNCTION_ARGS)
 	currentNode->candidatePriority = candidatePriority;
 
 	ReportAutoFailoverNodeReplicationSetting(
-			currentNode->nodeId,
-			currentNode->nodeName,
-			currentNode->nodePort,
-			currentNode->candidatePriority,
-			currentNode->replicationQuorum);
+		currentNode->nodeId,
+		currentNode->nodeName,
+		currentNode->nodePort,
+		currentNode->candidatePriority,
+		currentNode->replicationQuorum);
 
 	if (nodesCount == 1)
 	{
@@ -1392,10 +1394,10 @@ set_node_replication_quorum(PG_FUNCTION_ARGS)
 	currentNode->replicationQuorum = replicationQuorum;
 
 	ReportAutoFailoverNodeReplicationSetting(currentNode->nodeId,
-			currentNode->nodeName,
-			currentNode->nodePort,
-			currentNode->candidatePriority,
-			currentNode->replicationQuorum);
+											 currentNode->nodeName,
+											 currentNode->nodePort,
+											 currentNode->candidatePriority,
+											 currentNode->replicationQuorum);
 
 	/* we need to see the result of that operation in the next query */
 	CommandCounterIncrement();
@@ -1421,9 +1423,9 @@ set_node_replication_quorum(PG_FUNCTION_ARGS)
 		}
 
 		if (!FormationNumSyncStandbyIsValid(formation,
-										   primaryNode,
-										   currentNode->groupId,
-										   &standbyCount))
+											primaryNode,
+											currentNode->groupId,
+											&standbyCount))
 		{
 			ereport(ERROR,
 					(ERRCODE_INVALID_PARAMETER_VALUE,
@@ -1574,9 +1576,9 @@ synchronous_standby_names(PG_FUNCTION_ARGS)
 	{
 		AutoFailoverNode *secondaryNode = linitial(standbyNodesGroupList);
 
-		if (secondaryNode != NULL
-			&& secondaryNode->replicationQuorum
-			&& IsCurrentState(secondaryNode, REPLICATION_STATE_SECONDARY))
+		if (secondaryNode != NULL &&
+			secondaryNode->replicationQuorum &&
+			IsCurrentState(secondaryNode, REPLICATION_STATE_SECONDARY))
 		{
 			/* enable synchronous replication */
 			PG_RETURN_TEXT_P(cstring_to_text("*"));

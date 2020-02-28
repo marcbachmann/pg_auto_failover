@@ -94,7 +94,7 @@
 /*
  * Error codes returned to the shell in case something goes wrong.
  */
-#define EXIT_CODE_QUIT 0		/* it's ok, we were asked politely */
+#define EXIT_CODE_QUIT 0        /* it's ok, we were asked politely */
 #define EXIT_CODE_BAD_ARGS 1
 #define EXIT_CODE_BAD_CONFIG 2
 #define EXIT_CODE_BAD_STATE 3

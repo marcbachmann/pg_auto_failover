@@ -18,9 +18,8 @@
 #include "primary_standby.h"
 
 
-static void local_postgres_update_pg_failures_tracking(
-	LocalPostgresServer *postgres,
-	bool pgIsRunning);
+static void local_postgres_update_pg_failures_tracking(LocalPostgresServer *postgres,
+													   bool pgIsRunning);
 
 /*
  * Default settings for postgres databases managed by pg_auto_failover.
@@ -31,24 +30,24 @@ static void local_postgres_update_pg_failures_tracking(
  * replaced with dynamic values from the setup when used.
  */
 #define DEFAULT_GUC_SETTINGS_FOR_PG_AUTO_FAILOVER \
-	{ "max_wal_senders", "4" },			\
-	{ "max_replication_slots", "4" },	\
-	{ "wal_level", "'replica'" },		\
-	{ "wal_log_hints", "on" },			\
-	{ "wal_keep_segments", "64" },		\
-	{ "wal_sender_timeout", "'30s'" },	\
-	{ "hot_standby_feedback", "on" },	\
-	{ "hot_standby", "on" },			\
-	{ "synchronous_commit", "on" },		\
-	{ "logging_collector", "on" },		\
-	{ "log_destination", "stderr"},		\
-	{ "logging_collector", "on"},		\
-	{ "log_directory", "log"},			\
-	{ "log_min_messages", "info"},		\
-	{ "log_connections", "on"},			\
-	{ "log_disconnections", "on"},		\
-	{ "log_lock_waits", "on"},			\
-	{ "listen_addresses", "'*'" },		\
+	{ "max_wal_senders", "4" }, \
+	{ "max_replication_slots", "4" }, \
+	{ "wal_level", "'replica'" }, \
+	{ "wal_log_hints", "on" }, \
+	{ "wal_keep_segments", "64" }, \
+	{ "wal_sender_timeout", "'30s'" }, \
+	{ "hot_standby_feedback", "on" }, \
+	{ "hot_standby", "on" }, \
+	{ "synchronous_commit", "on" }, \
+	{ "logging_collector", "on" }, \
+	{ "log_destination", "stderr" }, \
+	{ "logging_collector", "on" }, \
+	{ "log_directory", "log" }, \
+	{ "log_min_messages", "info" }, \
+	{ "log_connections", "on" }, \
+	{ "log_disconnections", "on" }, \
+	{ "log_lock_waits", "on" }, \
+	{ "listen_addresses", "'*'" }, \
 	{ "port", "5432" }
 
 GUC postgres_default_settings[] = {
@@ -94,7 +93,6 @@ static void
 local_postgres_update_pg_failures_tracking(LocalPostgresServer *postgres,
 										   bool pgIsRunning)
 {
-
 	if (pgIsRunning)
 	{
 		/* reset PostgreSQL restart failures tracking */
@@ -114,6 +112,7 @@ local_postgres_update_pg_failures_tracking(LocalPostgresServer *postgres,
 		++postgres->pgStartRetries;
 	}
 }
+
 
 /*
  * local_postgres_finish closes our connection to the local PostgreSQL
@@ -173,7 +172,7 @@ ensure_local_postgres_is_running(LocalPostgresServer *postgres)
 
 				log_trace("waiting for pg_setup_is_running() [%s], attempt %d/%d",
 						  pgIsRunning ? "true" : "false",
-						  attempts+1,
+						  attempts + 1,
 						  maxAttempts);
 
 				if (pgIsRunning)
@@ -461,7 +460,7 @@ primary_add_standby_to_hba(LocalPostgresServer *postgres, char *standbyHostname,
 	PGSQL *pgsql = &(postgres->sqlClient);
 	PostgresSetup *postgresSetup = &(postgres->postgresSetup);
 	char hbaFilePath[MAXPGPATH];
-	char *authMethod =  "trust";
+	char *authMethod = "trust";
 
 	if (replicationPassword)
 	{
@@ -685,8 +684,7 @@ standby_promote(LocalPostgresServer *postgres)
 		return false;
 	}
 
-	do
-	{
+	do {
 		log_info("Waiting for postgres to promote");
 		pg_usleep(AWAIT_PROMOTION_SLEEP_TIME_MS * 1000);
 
@@ -696,8 +694,7 @@ standby_promote(LocalPostgresServer *postgres)
 					  "recovery mode after promotion");
 			return false;
 		}
-	}
-	while (inRecovery);
+	} while (inRecovery);
 
 	/*
 	 * It's necessary to do a checkpoint before allowing the old primary to

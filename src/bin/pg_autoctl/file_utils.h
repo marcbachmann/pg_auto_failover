@@ -20,9 +20,9 @@ bool ensure_empty_dir(const char *dirname, int mode);
 bool write_file(char *data, long fileSize, const char *filePath);
 bool append_to_file(char *data, long fileSize, const char *filePath);
 bool read_file(const char *filePath, char **contents, long *fileSize);
-bool move_file(char* sourcePath, char* destinationPath);
-bool duplicate_file(char* sourcePath, char* destinationPath);
-bool create_symbolic_link(char* sourcePath, char* targetPath);
+bool move_file(char *sourcePath, char *destinationPath);
+bool duplicate_file(char *sourcePath, char *destinationPath);
+bool create_symbolic_link(char *sourcePath, char *targetPath);
 
 void path_in_same_directory(const char *basePath,
 							const char *fileName,

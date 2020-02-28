@@ -130,6 +130,6 @@ void print_keeper_state(KeeperStateData *keeperState, FILE *fp);
 bool keeperStateAsJSON(KeeperStateData *keeperState, JSON_Value *js);
 void print_keeper_init_state(KeeperStateInit *initState, FILE *stream);
 
-char *PreInitPostgreInstanceStateToString(PreInitPostgreInstanceState pgInitState);
+char * PreInitPostgreInstanceStateToString(PreInitPostgreInstanceState pgInitState);
 
 #endif /* STATE_H */

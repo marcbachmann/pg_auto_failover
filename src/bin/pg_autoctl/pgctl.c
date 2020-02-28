@@ -49,14 +49,13 @@ static void log_program_output(Program prog);
 static bool escape_recovery_conf_string(char *destination,
 										int destinationSize,
 										const char *recoveryConfString);
-static bool prepare_primary_conninfo(
-	char *primaryConnInfo,
-	int primaryConnInfoSize,
-	int primaryNodeId,
-	const char *primaryHost, int primaryPort,
-	const char *replicationUsername,
-	const char *replicationPassword,
-	const char *applicationName);
+static bool prepare_primary_conninfo(char *primaryConnInfo,
+									 int primaryConnInfoSize,
+									 int primaryNodeId,
+									 const char *primaryHost, int primaryPort,
+									 const char *replicationUsername,
+									 const char *replicationPassword,
+									 const char *applicationName);
 static bool pg_write_recovery_conf(const char *pgdata,
 								   const char *primaryConnInfo,
 								   const char *replicationSlotName);
@@ -269,7 +268,7 @@ pg_include_config(const char *configFilePath,
 	/* find the include 'postgresql-auto-failover.conf' line */
 	includeLine = strstr(currentConfContents, configIncludeLine);
 
-	if (includeLine != NULL && (includeLine ==  currentConfContents ||
+	if (includeLine != NULL && (includeLine == currentConfContents ||
 								includeLine[-1] == '\n'))
 	{
 		log_debug("%s found in \"%s\"", configIncludeLine, configFilePath);
@@ -336,6 +335,7 @@ ensure_default_settings_file_exists(const char *configFilePath,
 	for (settingIndex = 0; settings[settingIndex].name != NULL; settingIndex++)
 	{
 		GUC *setting = &settings[settingIndex];
+
 		/*
 		 * Settings for "listen_addresses" and "port" are replaced with the
 		 * respective values present in pgSetup allowing those to be dynamic.
@@ -362,8 +362,8 @@ ensure_default_settings_file_exists(const char *configFilePath,
 		else if (strcmp(setting->name, "port") == 0)
 		{
 			appendPQExpBuffer(defaultConfContents, "%s = %d\n",
-					  setting->name,
-					  pgSetup->pgport);
+							  setting->name,
+							  pgSetup->pgport);
 		}
 		else if (setting->value != NULL)
 		{
@@ -1043,7 +1043,7 @@ escape_recovery_conf_string(char *destination, int destinationSize,
 	int escapedStringLength = 0;
 
 	/* we are going to add at least 3 chars: two quotes and a NUL character */
-	if (destinationSize < (length+3))
+	if (destinationSize < (length + 3))
 	{
 		log_error("BUG: failed to escape recovery parameter value \"%s\" "
 				  "in a buffer of %d bytes",
@@ -1125,11 +1125,11 @@ prepare_primary_conninfo(char *primaryConnInfo,
 	}
 
 	if (!escape_recovery_conf_string(escaped, BUFSIZE, buffer->data))
- 	{
- 		/* errors have already been logged. */
- 		destroyPQExpBuffer(buffer);
- 		return false;
- 	}
+	{
+		/* errors have already been logged. */
+		destroyPQExpBuffer(buffer);
+		return false;
+	}
 
 	/* now copy the buffer into primaryConnInfo for the caller */
 	size = snprintf(primaryConnInfo, primaryConnInfoSize, "%s", escaped);
@@ -1161,9 +1161,9 @@ pg_write_standby_signal(const char *configFilePath,
 						const char *replicationSlotName)
 {
 	GUC standby_settings[] = {
-		{ "primary_conninfo", (char  *)primaryConnInfo },
-		{ "primary_slot_name", (char  *) replicationSlotName},
-		{ "recovery_target_timeline", "latest"},
+		{ "primary_conninfo", (char *) primaryConnInfo },
+		{ "primary_slot_name", (char *) replicationSlotName },
+		{ "recovery_target_timeline", "latest" },
 		{ NULL, NULL }
 	};
 	char standbyConfigFilePath[MAXPGPATH];

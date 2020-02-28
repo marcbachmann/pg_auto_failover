@@ -257,7 +257,8 @@ parse_state_notification_message(StateNotification *notification)
 	}
 
 	/* skip S: */
-	ptr++; ptr++;
+	ptr++;
+	ptr++;
 
 	/* read the states */
 	col = strchr(ptr, FIELD_SEP);
@@ -319,7 +320,7 @@ read_length_delimited_string_at(const char *ptr, char *buffer, int size)
 	if (len < size)
 	{
 		/* advance col past the separator */
-		strlcpy(buffer, ++col, len+1);
+		strlcpy(buffer, ++col, len + 1);
 	}
 
 	/* col - ptr is the length of the digits plus the separator  */
@@ -343,78 +344,119 @@ parse_bool_with_len(const char *value, size_t len, bool *result)
 	{
 		case 't':
 		case 'T':
+		{
 			if (pg_strncasecmp(value, "true", len) == 0)
 			{
 				if (result)
+				{
 					*result = true;
+				}
 				return true;
 			}
 			break;
+		}
+
 		case 'f':
 		case 'F':
+		{
 			if (pg_strncasecmp(value, "false", len) == 0)
 			{
 				if (result)
+				{
 					*result = false;
+				}
 				return true;
 			}
 			break;
+		}
+
 		case 'y':
 		case 'Y':
+		{
 			if (pg_strncasecmp(value, "yes", len) == 0)
 			{
 				if (result)
+				{
 					*result = true;
+				}
 				return true;
 			}
 			break;
+		}
+
 		case 'n':
 		case 'N':
+		{
 			if (pg_strncasecmp(value, "no", len) == 0)
 			{
 				if (result)
+				{
 					*result = false;
+				}
 				return true;
 			}
 			break;
+		}
+
 		case 'o':
 		case 'O':
+		{
 			/* 'o' is not unique enough */
 			if (pg_strncasecmp(value, "on", (len > 2 ? len : 2)) == 0)
 			{
 				if (result)
+				{
 					*result = true;
+				}
 				return true;
 			}
 			else if (pg_strncasecmp(value, "off", (len > 2 ? len : 2)) == 0)
 			{
 				if (result)
+				{
 					*result = false;
+				}
 				return true;
 			}
 			break;
+		}
+
 		case '1':
+		{
 			if (len == 1)
 			{
 				if (result)
+				{
 					*result = true;
+				}
 				return true;
 			}
 			break;
+		}
+
 		case '0':
+		{
 			if (len == 1)
 			{
 				if (result)
+				{
 					*result = false;
+				}
 				return true;
 			}
 			break;
+		}
+
 		default:
+		{
 			break;
+		}
 	}
 
 	if (result)
-		*result = false;		/* suppress compiler warning */
+	{
+		*result = false;        /* suppress compiler warning */
+	}
 	return false;
 }
 
@@ -443,8 +485,7 @@ splitLines(char *errorMessage, char **linesArray, int size)
 	int lineNumber = 0;
 	char *currentLine = errorMessage;
 
-	do
-	{
+	do {
 		char *newLinePtr = strchr(currentLine, '\n');
 
 		if (newLinePtr == NULL && strlen(currentLine) > 0)
@@ -460,8 +501,7 @@ splitLines(char *errorMessage, char **linesArray, int size)
 
 			currentLine = ++newLinePtr;
 		}
-	}
-	while (currentLine != NULL && *currentLine != '\0');
+	} while (currentLine != NULL && *currentLine != '\0');
 
 	return lineNumber;
 }

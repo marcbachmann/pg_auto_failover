@@ -103,11 +103,11 @@ fsm_init_primary(Keeper *keeper)
 	}
 
 	pgInstanceIsOurs =
-		   initState.pgInitState == PRE_INIT_STATE_EMPTY
-		|| initState.pgInitState == PRE_INIT_STATE_EXISTS;
+		initState.pgInitState == PRE_INIT_STATE_EMPTY ||
+		initState.pgInitState == PRE_INIT_STATE_EXISTS;
 
-	if (initState.pgInitState == PRE_INIT_STATE_EMPTY
-		&& !postgresInstanceExists)
+	if (initState.pgInitState == PRE_INIT_STATE_EMPTY &&
+		!postgresInstanceExists)
 	{
 		if (!pg_ctl_initdb(pgSetup.pg_ctl, pgSetup.pgdata))
 		{
@@ -642,10 +642,9 @@ fsm_apply_settings(Keeper *keeper)
 		strlcpy(synchronous_standby_names, "*", BUFSIZE);
 	}
 
-	return
-		primary_set_synchronous_standby_names(
-			postgres,
-			synchronous_standby_names);
+	return primary_set_synchronous_standby_names(
+		postgres,
+		synchronous_standby_names);
 }
 
 
@@ -671,7 +670,6 @@ fsm_stop_postgres(Keeper *keeper)
 
 	return pg_ctl_stop(pgSetup->pg_ctl, pgSetup->pgdata);
 }
-
 
 
 /*

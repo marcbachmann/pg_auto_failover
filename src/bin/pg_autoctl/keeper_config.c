@@ -70,7 +70,7 @@
 	make_int_option("postgresql", "port", "pgport", \
 					true, &(config->pgSetup.pgport))
 
-#define OPTION_POSTGRESQL_PROXY_PORT(config)				\
+#define OPTION_POSTGRESQL_PROXY_PORT(config) \
 	make_int_option("postgresql", "proxyport", "proxyport", \
 					false, &(config->pgSetup.proxyport))
 
@@ -278,7 +278,6 @@ keeper_config_read_file(KeeperConfig *config,
 						bool pgIsNotRunningIsOk,
 						bool monitorDisabledIsOk)
 {
-
 	if (!keeper_config_read_file_skip_pgsetup(config, monitorDisabledIsOk))
 	{
 		/* errors have already been logged. */
@@ -631,7 +630,7 @@ keeper_config_destroy(KeeperConfig *config)
  * current config into the new one that's been editing.
  */
 #define strneq(x, y) \
-	((x != NULL) && (y != NULL) && ( strcmp(x, y) != 0))
+	((x != NULL) && (y != NULL) && (strcmp(x, y) != 0))
 
 bool
 keeper_config_accept_new(KeeperConfig *config, KeeperConfig *newConfig)
@@ -721,7 +720,7 @@ keeper_config_accept_new(KeeperConfig *config, KeeperConfig *newConfig)
 	{
 		log_info("Reloading configuration: "
 				 "replication.maximum_backup_rate is now \"%s\"; "
-				 "used to be \"%s\"" ,
+				 "used to be \"%s\"",
 				 newConfig->maximum_backup_rate, config->maximum_backup_rate);
 
 		/* note: strneq checks args are not NULL, it's safe to proceed */
@@ -732,8 +731,7 @@ keeper_config_accept_new(KeeperConfig *config, KeeperConfig *newConfig)
 	/*
 	 * And now the timeouts. Of course we support changing them at run-time.
 	 */
-	if (newConfig->network_partition_timeout
-		!= config->network_partition_timeout)
+	if (newConfig->network_partition_timeout != config->network_partition_timeout)
 	{
 		log_info("Reloading configuration: timeout.network_partition_timeout "
 				 "is now %d; used to be %d",
@@ -744,8 +742,7 @@ keeper_config_accept_new(KeeperConfig *config, KeeperConfig *newConfig)
 			newConfig->network_partition_timeout;
 	}
 
-	if (newConfig->prepare_promotion_catchup
-		!= config->prepare_promotion_catchup)
+	if (newConfig->prepare_promotion_catchup != config->prepare_promotion_catchup)
 	{
 		log_info("Reloading configuration: timeout.prepare_promotion_catchup "
 				 "is now %d; used to be %d",
@@ -756,8 +753,7 @@ keeper_config_accept_new(KeeperConfig *config, KeeperConfig *newConfig)
 			newConfig->prepare_promotion_catchup;
 	}
 
-	if (newConfig->prepare_promotion_walreceiver
-		!= config->prepare_promotion_walreceiver)
+	if (newConfig->prepare_promotion_walreceiver != config->prepare_promotion_walreceiver)
 	{
 		log_info(
 			"Reloading configuration: timeout.prepare_promotion_walreceiver "
@@ -769,8 +765,8 @@ keeper_config_accept_new(KeeperConfig *config, KeeperConfig *newConfig)
 			newConfig->prepare_promotion_walreceiver;
 	}
 
-	if (newConfig->postgresql_restart_failure_timeout
-		!= config->postgresql_restart_failure_timeout)
+	if (newConfig->postgresql_restart_failure_timeout !=
+		config->postgresql_restart_failure_timeout)
 	{
 		log_info(
 			"Reloading configuration: timeout.postgresql_restart_failure_timeout "
@@ -782,8 +778,8 @@ keeper_config_accept_new(KeeperConfig *config, KeeperConfig *newConfig)
 			newConfig->postgresql_restart_failure_timeout;
 	}
 
-	if (newConfig->postgresql_restart_failure_max_retries
-		!= config->postgresql_restart_failure_max_retries)
+	if (newConfig->postgresql_restart_failure_max_retries !=
+		config->postgresql_restart_failure_max_retries)
 	{
 		log_info(
 			"Reloading configuration: retries.postgresql_restart_failure_max_retries "
@@ -873,8 +869,8 @@ keeper_config_set_backup_directory(KeeperConfig *config, int nodeId)
 	}
 
 	/* if we didn't have a backup directory yet, set one */
-	if (IS_EMPTY_STRING_BUFFER(config->backupDirectory)
-		|| strcmp(backupDirectory, config->backupDirectory) == 0)
+	if (IS_EMPTY_STRING_BUFFER(config->backupDirectory) ||
+		strcmp(backupDirectory, config->backupDirectory) == 0)
 	{
 		/* we might be able to use the nodeId, better than the nodename */
 		if (nodeId > 0)

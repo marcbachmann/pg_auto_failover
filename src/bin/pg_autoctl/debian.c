@@ -21,46 +21,37 @@
 
 #define EDITED_BY_PG_AUTOCTL "# edited by pg_auto_failover \n"
 
-static bool debian_find_postgres_configuration_files(
-	PostgresSetup *pgSetup,
-	PostgresConfigFiles *pgConfigFiles);
+static bool debian_find_postgres_configuration_files(PostgresSetup *pgSetup,
+													 PostgresConfigFiles *pgConfigFiles);
 
-static bool debian_init_postgres_config_files(
-	PostgresSetup *pgSetup,
-	PostgresConfigFiles *pgConfFiles,
-	PostgresConfigurationKind confKind);
+static bool debian_init_postgres_config_files(PostgresSetup *pgSetup,
+											  PostgresConfigFiles *pgConfFiles,
+											  PostgresConfigurationKind confKind);
 
-static bool buildDebianDataAndConfDirectoryNames(
-	PostgresSetup *pgSetup,
-	DebianPathnames *debPathnames);
+static bool buildDebianDataAndConfDirectoryNames(PostgresSetup *pgSetup,
+												 DebianPathnames *debPathnames);
 
-static bool expandDebianPatterns(
-	DebianPathnames *debPathnames,
-	const char *dataDirectoryTemplate,
-	const char *confDirectoryTemplate);
+static bool expandDebianPatterns(DebianPathnames *debPathnames,
+								 const char *dataDirectoryTemplate,
+								 const char *confDirectoryTemplate);
 
-static bool expandDebianPatternsInDirectoryName(
-	char *pathname,
-	int pathnameSize,
-	const char *template,
-	const char *versionName,
-	const char *clusterName);
+static bool expandDebianPatternsInDirectoryName(char *pathname,
+												int pathnameSize,
+												const char *template,
+												const char *versionName,
+												const char *clusterName);
 
-static void initPostgresConfigFiles(
-	const char *dirname,
-	PostgresConfigFiles *pgConfigFiles,
-	PostgresConfigurationKind kind);
+static void initPostgresConfigFiles(const char *dirname,
+									PostgresConfigFiles *pgConfigFiles,
+									PostgresConfigurationKind kind);
 
-static bool postgresConfigFilesAllExist(
-	PostgresConfigFiles *pgConfigFiles);
+static bool postgresConfigFilesAllExist(PostgresConfigFiles *pgConfigFiles);
 
-static bool move_configuration_files(
-	PostgresConfigFiles *src,
-	PostgresConfigFiles *dst);
+static bool move_configuration_files(PostgresConfigFiles *src,
+									 PostgresConfigFiles *dst);
 
-static bool comment_out_configuration_parameters(
-	const char *srcConfPath,
-	const char *dstConfPath);
+static bool comment_out_configuration_parameters(const char *srcConfPath,
+												 const char *dstConfPath);
 
 static bool disableAutoStart(PostgresConfigFiles *pgConfigFiles);
 
@@ -381,11 +372,11 @@ expandDebianPatterns(DebianPathnames *debPathnames,
 											   debPathnames->versionName,
 											   debPathnames->clusterName)
 
-		&& expandDebianPatternsInDirectoryName(debPathnames->confDirectory,
-											   MAXPGPATH,
-											   confDirectoryTemplate,
-											   debPathnames->versionName,
-											   debPathnames->clusterName);
+		   && expandDebianPatternsInDirectoryName(debPathnames->confDirectory,
+												  MAXPGPATH,
+												  confDirectoryTemplate,
+												  debPathnames->versionName,
+												  debPathnames->clusterName);
 }
 
 
@@ -426,7 +417,7 @@ expandDebianPatternsInDirectoryName(char *pathname,
 
 		if (previousCharIsPercent)
 		{
-			switch(currentChar)
+			switch (currentChar)
 			{
 				case 'v':
 				{
@@ -439,7 +430,7 @@ expandDebianPatternsInDirectoryName(char *pathname,
 					 */
 					if ((pathnameIndex + versionSize) < pathnameSize)
 					{
-						memcpy(pathname+pathnameIndex, versionName, versionSize);
+						memcpy(pathname + pathnameIndex, versionName, versionSize);
 						pathnameIndex += versionSize;
 					}
 					break;
@@ -456,7 +447,7 @@ expandDebianPatternsInDirectoryName(char *pathname,
 					 */
 					if ((pathnameIndex + clusterSize) < pathnameSize)
 					{
-						memcpy(pathname+pathnameIndex, clusterName, clusterSize);
+						memcpy(pathname + pathnameIndex, clusterName, clusterSize);
 						pathnameIndex += clusterSize;
 					}
 					break;
@@ -479,6 +470,7 @@ expandDebianPatternsInDirectoryName(char *pathname,
 
 	return true;
 }
+
 
 /*
  * initPostgresConfigFiles initializes PostgresConfigFiles structure with our
@@ -503,9 +495,9 @@ initPostgresConfigFiles(const char *dirname,
 static bool
 postgresConfigFilesAllExist(PostgresConfigFiles *pgConfigFiles)
 {
-	return file_exists(pgConfigFiles->conf)
-		&& file_exists(pgConfigFiles->ident)
-		&& file_exists(pgConfigFiles->hba);
+	return file_exists(pgConfigFiles->conf) &&
+		   file_exists(pgConfigFiles->ident) &&
+		   file_exists(pgConfigFiles->hba);
 }
 
 
@@ -632,6 +624,7 @@ comment_out_configuration_parameters(const char *srcConfPath,
 		if (matchedString != NULL)
 		{
 			variableFound = true;
+
 			/* regexp_first_match uses malloc, result must be deallocated */
 			free(matchedString);
 		}
@@ -694,6 +687,5 @@ disableAutoStart(PostgresConfigFiles *pgConfigFiles)
 		return false;
 	}
 
-	return
-		write_file(newStartConfData, strlen(newStartConfData), startConfPath);
+	return write_file(newStartConfData, strlen(newStartConfData), startConfPath);
 }

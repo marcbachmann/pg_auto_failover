@@ -39,7 +39,7 @@ extern bool outputJSON;
 	"  --group       pg_auto_failover group Id\n" \
 	"  --monitor     pg_auto_failover Monitor Postgres URL\n" \
 
-#define KEEPER_CLI_NON_WORKER_SETUP_OPTIONS			 \
+#define KEEPER_CLI_NON_WORKER_SETUP_OPTIONS \
 	"  --pgctl       path to pg_ctl\n" \
 	"  --pgdata      path to data director\n" \
 	"  --pghost      PostgreSQL's hostname\n" \
